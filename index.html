@@ -1,17 +1,45 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Study Planner</title>
+
+<!-- Favicon -->
+<link
+  rel="icon"
+  type="image/svg+xml"
+  href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234f46e5'/%3E%3Cpath d='M18 14h28a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4Z' fill='white'/%3E%3Cpath d='M21 24h22M21 32h22M21 40h14' stroke='%234f46e5' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+
+<!-- Optional fallback favicon -->
+<link
+  rel="alternate icon"
+  href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234f46e5'/%3E%3Cpath d='M18 14h28a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4Z' fill='white'/%3E%3Cpath d='M21 24h22M21 32h22M21 40h14' stroke='%234f46e5' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+
 <!-- Baseline hardening for this wrapper page itself -->
 <meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; frame-src https://script.google.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none';">
+
 <style>
-  html,body{margin:0;padding:0;height:100%;background:#f4f3ee;overflow:hidden;}
-  #gwFrame{border:0;width:100%;height:100vh;display:block;}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    background:#f4f3ee;
+    overflow:hidden;
+  }
+
+  #gwFrame{
+    border:0;
+    width:100%;
+    height:100vh;
+    display:block;
+  }
 </style>
 </head>
+
 <body>
 
 <iframe id="gwFrame"
@@ -21,30 +49,41 @@
 <script>
   var BASE_URL = "https://script.google.com/macros/s/AKfycbxofpdGt_UzboY7fSBDvuifTdN2H9eNPaqRuopZ5Pt43GZ0RWVSTXmY9wqm3V4bHA2b/exec";
 
-var EXPECTED_APP_ORIGIN_SUFFIX = ".googleusercontent.com";
+  var EXPECTED_APP_ORIGIN_SUFFIX = ".googleusercontent.com";
   var iframe = document.getElementById("gwFrame");
 
   function isTrustedAppOrigin(origin) {
     try {
       var u = new URL(origin);
-      return u.protocol === "https:" && u.hostname.endsWith(EXPECTED_APP_ORIGIN_SUFFIX);
+      return u.protocol === "https:" &&
+             u.hostname.endsWith(EXPECTED_APP_ORIGIN_SUFFIX);
     } catch (e) {
       return false;
     }
   }
 
   window.addEventListener("message", function (ev) {
-    if (!isTrustedAppOrigin(ev.origin)) return; // only trust the embedded app's real origin
+    if (!isTrustedAppOrigin(ev.origin)) return;
+
     var d = ev.data;
     if (!d || d.source !== "study-planner-nav") return;
 
-        if (d.type === "frame-guard-hello" && d.nonce) {
-      ev.source.postMessage({ source: "study-planner-nav", type: "frame-guard-ack", nonce: d.nonce }, ev.origin);
+    if (d.type === "frame-guard-hello" && d.nonce) {
+      ev.source.postMessage(
+        {
+          source: "study-planner-nav",
+          type: "frame-guard-ack",
+          nonce: d.nonce
+        },
+        ev.origin
+      );
       return;
     }
 
     if (d.type === "navigate" && d.url) {
-      if (typeof d.url !== "string" || d.url.indexOf(BASE_URL) !== 0) return; 
+      if (typeof d.url !== "string" ||
+          d.url.indexOf(BASE_URL) !== 0) return;
+
       iframe.src = d.url;
     }
   });
@@ -52,3 +91,4 @@ var EXPECTED_APP_ORIGIN_SUFFIX = ".googleusercontent.com";
 
 </body>
 </html>
+```
